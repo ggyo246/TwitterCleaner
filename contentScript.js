@@ -133,13 +133,15 @@ async function OnTweetClean(message) {
             break
         var deletecount = 0;
 
-        var timelineElement = document.querySelectorAll('[aria-label^="타임라인:"][aria-label$="님의 트윗"]');
+        var timelineElement = document.querySelectorAll('[aria-label^="타임라인: 2시저그’s posts"]');
         if (timelineElement.length == 0) {
             throw ("Timeline find failed");
         }
 
         var cellInnverDives = timelineElement[0].querySelectorAll('[data-testid="cellInnerDiv"]');
 
+		console.log("cellInnverDives Length is " + cellInnverDives.length);
+		
         for (var i = 0; i < cellInnverDives.length; i++) {
             var cellElement = cellInnverDives[i];
 
@@ -147,21 +149,24 @@ async function OnTweetClean(message) {
                 continue;
 
             var socialContext = cellElement.querySelectorAll('[data-testid="socialContext"]');
-            if (socialContext.length != 0) {
-                if (socialContext[0].childNodes[0].textContent == "내가 리트윗함" && deleteRetweet) {
-                    var unretweet = cellElement.querySelectorAll('[aria-label$="리트윗함"]');
+			
+            if (socialContext.length != 0)
+			{
+				if (deleteRetweet) 
+				{
+					var unretweet = cellElement.querySelectorAll('[data-testid="unretweet"]');
 
-                    if (unretweet.length == 0) {
-                        continue;
-                    }
+					if (unretweet.length == 0) {
+						continue;
+					}
 
-                    (unretweet[0]).click();
-                    await sleep(delay);
-                    var unretweetConfirm = document.querySelectorAll('[data-testid="unretweetConfirm"]');
-                    unretweetConfirm[0].click();
-                    deletecount += 1;
-                    showPopup("리트윗 삭제됨!", '#19CF86')
-                }
+					(unretweet[0]).click();
+					await sleep(delay);
+					var unretweetConfirm = document.querySelectorAll('[data-testid="unretweetConfirm"]');
+					unretweetConfirm[0].click();
+					deletecount += 1;
+					showPopup("리트윗 삭제됨!", '#19CF86')
+				}
             } else if (deleteMytweet) {
                 var moreButton = cellElement.querySelectorAll('[aria-label="더 보기"]');
 
